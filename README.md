@@ -1,3 +1,5 @@
 # C-PREPROCESSOR
-A custom C Preprocessor that supports replacement of object like macros (macros without arguments), Removal of Single line and Multi line comments and Inclusion of Pre-define and User-define Header files.
-It displays appropriate error messages for invalid or missing of header files.
+prepro: Execuatable file generated after "make" command 
+i.i: C-Preprocessor (.i)output file.
+test.c: To check test cases for C-Preprocessor
+#(write in command line as: ./prepro test.c)
