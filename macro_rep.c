@@ -3,11 +3,13 @@
 
 void replace_macro(char *str)
 {
-	int i,j,k;
-	char ch;
+	int i,j,k,spec=0;
 	FILE *fp2,*fp;
 	fp2=fopen("i.i","a+");         //Preprocessor output file
-
+ 	char keyword[]="int char float double long short if else switch case default continue return goto break static auto register extern struct union typedef enum for while do sign unsign const volatile sizeof void";
+    char num[]="1234567890";
+    char spechar[]="@#$%&!~-+=[]{}|<>/.:",ch;
+	
 	for(i=0;str[i];i++)
 	{	
 		char name[25]="";
@@ -21,12 +23,23 @@ void replace_macro(char *str)
 				j=0;
 				while(str[i]==' ')       //search for macro name
 					i++;
-				while(str[i]!=' ')       //Collect macro_name
+				while(str[i]!=' ' && str[i]!='\n')       //Collect macro_name
 					name[j++]=str[i++];
-				
-				j=0; i++;
-				
-				while(str[i]!='\n')    
+				if(str[i]=='\n')                //if macro defination not written
+				{
+					str[i-1]=' ';
+					i=i-2;
+				}
+				for(j=0;spechar[j];j++)
+                	if(strchr(name,spechar[j]))
+                        	spec=1;
+                if(strstr(keyword,name) || strchr(num,name[0]) || spec)
+                {
+                	printf("\033[1m%s:%s:\033[0m \033[31merror:\033[0m macro name must be identifiers\n\t| #define \033[33m%s\n\t|\t  ^~~~\n\033[0m",fname,__TIME__,name);
+                    return;
+                }
+				j=0,i++;
+				while(str[i]!='\n')           //collect macro defination   
 				{
 					if(str[i]=='\\')
 					i=i+2;
@@ -35,7 +48,7 @@ void replace_macro(char *str)
 						i++;
 					if(str[i]=='\t')
 						str[i]=' ';
-					def[j++]=str[i++];    //Collect macro defination
+					def[j++]=str[i++];    //store macro defination
 				}
 			}
 			
